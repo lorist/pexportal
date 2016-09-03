@@ -24,6 +24,11 @@ application.config['LDAP_PASSWORD'] = 'Mypexservicepwd'
 application.config['LDAP_USER_OBJECT_FILTER'] = '(&(objectCategory=person)(objectClass=user) (sAMAccountName=%s))'
 application.config['LDAP_LOGIN_VIEW'] = 'login'
 
+# Pexip management node info:
+mgr_address = "mgr.example.com.au"
+mgr_user = "admin"
+mgr_password = "password"
+
 # def register_hooks(application):
 @application.before_request
 def before_request():
