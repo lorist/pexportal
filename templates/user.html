@@ -1,0 +1,100 @@
+<!-- extend base layout -->
+{% extends "layout.html" %}
+{% block content %}
+  <h3>VMR settings user: {{user|capitalize}} </h3>
+  {% if error %}
+  <p class=error><strong>Error:</strong> {{ error }}
+{% endif %}
+  <p>{% if user.id == g.user.id %}<a href="{{ url_for('edit') }}">Edit your VMR</a></p>{% endif %}
+  <!-- <hr> -->
+  <div class="table-responsive">
+  <table class="table">
+    <col width="110">
+    <td><b>Name:</b></td><td>{{name}}</td>
+    <td><button class="btn" style="float: left;" data-clipboard-text="
+    Please meet {{user|capitalize}} in myVMR:
+        Ways to connect:{% for alias in aliases %}{% if '@' in alias.alias %}
+        {% if guest_pin %}PIN Number: {{guest_pin}}{% endif %}
+        Skype: sip://{{alias.alias}}
+        WebRTC: https://vc.pexip.com.au/webapp/?conference={{alias.alias}}
+        Pexip APP: pexip://{{alias.alias}}{% endif %}{% if alias.alias|int %}
+        Phone: +61 2 9810 4000 then enter {{alias.alias}} #{% endif %}{% endfor %}">Copy VMR to clipboard</button>
+      </td>
+    <tr>
+      <td><b>Host PIN:</b></td><td>{{pin}}</td>
+    </tr>
+    <tr>
+      <td><b>Allow Guests</b></td><td>{{allow_guests}}</td>
+    </tr>
+    {%if allow_guests and guest_pin%}
+    <tr>
+      <td><b>Guest PIN:</b></td><td>{{guest_pin}}</td>
+    </tr>
+    {%endif%}
+    <th>View: </th>
+
+    {%if host_view == "one_main_seven_pips" %}
+      <td><img src="{{ url_for('static', filename='img/one_main_seven_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+    {%endif%}</td>
+    {%if host_view == "one_main_twentyone_pips" %}
+      <td><img src="{{ url_for('static', filename='img/one_main_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+    {%endif%}</td>
+    {%if host_view == "one_main_zero_pips" %}
+      <td><img src="{{ url_for('static', filename='img/one_main_zero_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+    {%endif%}</td>
+    {%if host_view == "two_mains_twentyone_pips" %}
+      <td><img src="{{ url_for('static', filename='img/two_main_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+    {%endif%}</td>
+    <tr>
+        <th  colspan="3">Aliases:</th>
+    </tr>
+    {% for alias in aliases %}
+    <tr>
+      {% if '@' in alias.alias %}
+        <td></td>
+        <td>Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></td><tr>
+        <td></td>
+        <td>WebRTC: <a href="https://vc.pexip.com.au/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></td><tr>
+        <td></td>
+        <td>Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></td>
+      {% endif %}
+      {% if alias.alias|int %}
+        <tr><td></td><td>Phone: <a href="tel:+61 2 9810 4000">+61 2 9810 4000 then enter {{alias.alias}} #</a></td></tr>
+      {% endif %}
+    </tr>
+
+    {% endfor %}
+    </tr>
+  </td>
+  <tr></tr>
+  </table>
+</div>
+  <hr>
+  <div class="table-responsive">
+  <h3>Devices for user: {{user|capitalize}} </h3>
+   <table class="table">
+     <thead>
+         <tr>
+             <th>Alias</th>
+             <th>Description</th>
+         <tr>
+     </thead>
+     <tbody>
+         {% for d in devices %}
+         <tr>
+             <td>{{ d.alias }}</td>
+             <td>{{ d.description }}</td>
+             <td><a href="{{ url_for('editmydevice', id=d.id) }}">Change Password</a></td>
+             {% if d.primary_owner_email_address %}
+             <td><a href="{{ url_for('emaildevice', id=d.id) }}">Email Me Details</a></td>
+              {% else %}
+              <td><i>No email address</i></td>
+             {% endif %}
+         </tr>
+         <!-- <tr><td><a href="pexip-provision://settings?name=Dennis&registrationHost=vc.pexip.com.au&registrationAlias={{d.alias}}&registrationUsername={{d.username}}&registrationPassword=12345">Provision</a></td></tr> -->
+         {% endfor %}
+     </tbody>
+ </table>
+ <hr>
+ </div>
+{% endblock %}

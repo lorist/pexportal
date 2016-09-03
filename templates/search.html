@@ -1,0 +1,58 @@
+<!-- extend base layout -->
+{% extends "layout.html" %}
+<style>
+hr {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+}
+</style>
+{% block content %}
+  <h1>VMRs found:</h1>
+  <p></p>
+  <hr>
+  <table>
+    {% for n in name %}
+    <td><b>Name:</b></td><td>{{n.name}}</td>
+    <tr><td><b>Guest PIN:</b></td><td>{{n.guest_pin}}</td></tr>
+    <th>View: </th>
+    {%if n.host_view == "one_main_seven_pips" %}
+      <td><img src="{{ url_for('static', filename='img/one_main_seven_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+    {%endif%}</td>
+    {%if n.host_view == "one_main_twentyone_pips" %}
+      <td><img src="{{ url_for('static', filename='img/one_main_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+    {%endif%}</td>
+    {%if n.host_view == "one_main_zero_pips" %}
+      <td><img src="{{ url_for('static', filename='img/one_main_zero_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+    {%endif%}</td>
+
+    <tr>
+        <th>Aliases:</th>
+    </tr>
+    {% for alias in n.aliases %}
+    <td>
+    <tr>
+      {% if '@' in alias.alias %}
+        <td>Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></td>
+        <td>WebRTC: <a href="https://vc.pexip.com.au/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></td>
+        <td>Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></td>
+      {% endif %}
+      {% if alias.alias|int %}
+        <tr><td colspan="2">Phone: <a href="tel:+61 2 9810 4000">+61 2 9810 4000 then enter {{alias.alias}} #</a></td></tr>
+      {% endif %}
+    </tr>
+    {% endfor %}
+    </tr>
+  </td>
+    <tr><td><hr></td><td><hr></td><td><hr></td></tr>
+    {% endfor %}
+  </table>
+
+</p>
+
+
+{% endblock %}

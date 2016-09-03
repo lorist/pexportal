@@ -1,0 +1,162 @@
+<!-- extend base layout -->
+{% extends "layout.html" %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="/jwplayer/jwplayer.js"></script>
+{% block body_attrs %} onload="action_request_args()" {% endblock %}
+{% block content %}
+
+  <h3>myVMR Control:</h3>
+  <div>
+  <form id="joinleaveform" onsubmit="return user.join()">
+    <label class="clabel">Conference </label><input class="cinput" type="text" id="conference" value="{{conference}}" size=40 /><br/>
+    <label class="clabel">Worker </label><input class="cinput" type="text" id="worker" value="{{worker}}" size=40 /><br/>
+    <label class="clabel">Pin </label><input class="cinput" type="text" id="pin" value="{{pin}}" size=8 /><br/>
+    <label class="clabel">Display name </label><input class="cinput" type="text" id="display_name" value="{{display_name}}-Moderator" size=40 /><br/>
+    <label class="hidden">Extension </label><input class="hidden" type="text" id="two_stage_dial_ext" value="" size=40 /><br/><br/>
+    <input class="green cinput" id="joinleave" type="submit" value="Join Conference" /><label id="joinerror" class="red"></label><br/>
+  </form>
+  </div>
+  <br/>
+  <div>
+  </div>
+  <br/>
+  <div id="confcontrol" class="hide">
+  <div id="liveviewdiv">
+      <fieldset>
+      <legend>RTMP</legend>
+      <table><tr><td><span id="liveviewplayer"></span></td><td><span id="liveviewpresplayer"></span></td></tr></table>
+      <input id="liveview" type="button" onclick="user.liveview()" value="Start live view" />
+      <span id="dual_live"><input id="dual_live_sel" type="checkbox" value="dual" />Dual stream</span><br/>
+      <input id="getrtmpaddress" type="button" onclick="user.getrtmpaddress()" value="Get RTMP address" />
+      <input id="rtmpaddress" size=90 /><br/>
+      </fieldset>
+  </div>
+
+  <br/>
+  <div id="layoutdiv">
+    <table class="table">
+      <fieldset>
+      <legend>Layout control</legend>
+      <td class="hide"><label>Actors </label><select id="actors" value="everyone">
+          <option value="everyone">Everyone</option>
+          <option value="selected">Selected</option>
+      </select></td><tr>
+      <td><label>Layout </label><select id="layout" value="1:7">
+          <option value="1:0">1 main 0 pips</option>
+          <option value="4:0">Equal layout</option>
+          <option value="1:7">1 main 7 pips</option>
+          <option value="1:21">1 main 21 pips</option>
+      </select></td><tr>
+      <td class="hide"><label>PlusN (off/auto/n)</label><input id="plusn" list="plusnvalues" value="auto" size=8/></td>
+      <td class="hide"><datalist id="plusnvalues"><option id="auto_option" value="auto"\><option value="off"\></datalist></td>
+      <td class="hide"><label>VAD backfill </label><input type="checkbox" id="vadbackfill" checked/></td>
+      <td class="hide"><label>Overlay text </label><select id="overlay_text" value="off">
+          <option value="off">Off</option>
+          <option value="auto">Auto</option>
+      </select></td>
+      <td class="hide"><label>Indicators </label><select id="indicators" value="auto">
+          <option value="off">Off</option>
+          <option value="auto">Auto</option>
+      </select></td>
+      <td><label>Audience </label><select id="audience" value="everyone" onchange="update_audience()">
+          <option value="everyone">Everyone</option>
+          <option value="hosts">Hosts</option>
+      </select></td>
+      <td><input id="overridelayout" type="button" onclick="user.overridelayout()" value="Override layout" /></td>
+      <td><input id="resetlayout" type="button" onclick="user.resetlayout()" value="Reset layout" /><br/></td>
+      <div id="guestlayout" class="hide">
+      <td><label>Actors </label><select id="guest_actors" value="everyone">
+          <option value="everyone">Everyone</option>
+          <option value="selected">Selected</option>
+      </select></td>
+      <td><label>Layout </label><select id="guest_layout" value="1:7">
+          <option value="1:0">1 main 0 pips</option>
+          <option value="4:0">Equal layout</option>
+          <option value="1:7">1 main 7 pips</option>
+          <option value="1:21">1 main 21 pips</option>
+      </select></td>
+      <td><label>PlusN (off/auto/n)</label><input id="guest_plusn" list="guest_plusnvalues" value="auto" size=8/></td>
+      <td><datalist id="guest_plusnvalues"><option value="auto"\><option value="off"\></datalist></td>
+      <td><label>VAD backfill </label><input type="checkbox" id="guest_vadbackfill" checked/></td>
+      <td><label>Overlay text </label><select id="guest_overlay_text" value="off">
+          <option value="off">Off</option>
+          <option value="auto">Auto</option>
+      </select></td>
+      <td><label>Indicators </label><select id="guest_indicators" value="auto">
+          <option value="off">Off</option>
+          <option value="auto">Auto</option>
+      </select></td>
+      <td><label>Audience </label><select id="guest_audience" value="guests">
+          <option value="guests">Guests</option>
+      </select></td>
+      </div>
+      </fieldset>
+
+  </div>
+    </table>
+  <br/>
+  <div id="dialdiv">
+      <fieldset>
+      <legend>Dial out</legend>
+      <label>Protocol </label><select id="protocol" value="sip">
+          <option value="sip">SIP</option>
+          <option value="h323">H.323</option>
+          <option value="mssip">Lync</option>
+          <option value="rtmp">RTMP</option>
+      </select>
+      <label>Local alias </label><input id="localalias" type="text" value="" size=15/>
+      <label>Local display name </label><input id="localdisplayname" type="text" value="" size=15/>
+      <label>Remote alias </label><input id="remotealias" type="text" value="" size=15/>
+      <label>Role </label><select id="role" value="guest">
+          <option value="guest">Guest</option>
+          <option value="host">Host</option>
+      </select>
+      <input id="dial" type="button" onclick="user.dial()" value="Dial" /><br/>
+      <a target="_blank" href="http://youtube.pexip.com">Create a remotealias for YouTube streaming</a>
+      </fieldset>
+  </div>
+
+  <br/>
+  <div id="chatdiv" class="hide">
+      <fieldset>
+      <legend>Chat</legend>
+      <form onsubmit="return user.send_message()">
+      <div id="chatbox" class="chatbox"></div><br/>
+      <input id="chatinput" type="text" size=200 />
+      <input id="chatsend" type="button" onclick="user.send_message()" value="Send"/>
+      </form>
+      </fieldset>
+  </div>
+  <br/>
+  <img id="presentation" width=400 height=200 class="hide">
+
+  <canvas id="layout_canvas" width=280 height=200>
+  </canvas>
+  <br/>
+
+  <ul id="waitingroom" class="roster_list"><p><b>Waiting Room</b></p></ul>
+  <i id="conflock" onclick="user.lock()"></i>
+  <i id="guestsmuted" onclick="user.muteallguests()"></i>
+  <i id="disconnectall" onclick="user.disconnect_all()"></i>
+  <ul id="rosterlist" class="roster_list"><p><b>Conference</b></p></ul>
+
+    <div> <!-- id="fixed-div"> -->
+    <div class="colcontainer">
+      <label class="clabel">Disconnect </label><div class="ia fa fa-eject fa-fw red"></div>
+      <label class="clabel">Muted </label><div class="ia fa fa-microphone-slash fa-fw red"></div>
+      <label class="clabel">Unmuted </label><div class="ia fa fa-microphone fa-fw green"></div>
+      <label class="clabel">Hold </label><div class="ia fa fa-pause fa-fw"></div>
+      <label class="clabel">Resume </label><div class="ia fa fa-play fa-fw"></div>
+      <label class="clabel">Locked </label><div class="ia fa fa-lock fa-fw red"></div>
+      <label class="clabel">Unlocked </label><div class="ia fa fa-unlock fa-fw green"></div>
+      <label class="clabel">Spotlight ON</label><div class="ia fa fa-star fa-fw yellow"></div>
+      <label class="clabel">Spotlight OFF</label><div class="ia fa fa-star-o fa-fw yellow"></div>
+      <label class="clabel">Allowed to see presentation</label><div class="ia fa fa-bar-chart fa-fw green"></div>
+      <label class="clabel">Not allowed to see presentation</label><div class="ia fa fa-bar-chart fa-fw red"></div>
+      <label class="clabel">Chair </label><div class="ia fa fa-commenting fa-fw"></div>
+      <label class="clabel">Guest </label><div class="ia fa fa fa-comment fa-fw"></div>
+    </div>
+    </div>
+  </div>
+
+{% endblock %}

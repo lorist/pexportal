@@ -1,0 +1,35 @@
+body{
+  /*background:url('http://coolblackppt.com/wp-content/uploads/orange-textile-20150511060948-555047ac01cbe.jpg');*/
+  /*background:url('http://www.wallpaperup.com/uploads/wallpapers/2012/10/21/20181/cad2441dd3252cf53f12154412286ba0.jpg');*/
+  /*background:url('/static/img/desktop-bg-1920x1080.png');*/
+  background-color: grey;
+  padding:50px;
+}
+.container-main {
+  max-width: 700px;
+  padding: 15px 15px;
+  background-color:rgba(255,255,255,.9);
+  margin: auto;
+  /*box-shadow: 10px 10px 5px #212121;*/
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+}
+h2 {color: red;}
+.navbar-default {
+  /*background-color:#212121;*/
+  background-image: none;
+  background-repeat: no-repeat;
+  border: none;
+ }
+ hr {
+   border-top: 3px double #8c8b8b;
+     /*border: 0;
+     border-bottom: 1px dashed #ccc;
+     background: #999;*/
+ }
+
+.flashes {
+  color: green;
+  background-color: #ffff42;
+}

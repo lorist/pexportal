@@ -1,0 +1,28 @@
+<!-- extend base layout -->
+{% extends "layout.html" %}
+{% block content %}
+  <h3>All Registered Devices:</h3>
+  <p></p>
+  <hr>
+  <table class="table">
+    <thead>
+        <tr>
+            <th>Alias</th>
+            <th>Protocol</th>
+        <tr>
+    </thead>
+    <tbody>
+        {% for r in registered %}
+        <tr>
+            <td>{{ r.alias }}</td>
+            <td>{{ r.protocol }}</td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</p>
+
+
+{% endblock %}

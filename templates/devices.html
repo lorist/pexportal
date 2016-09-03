@@ -1,0 +1,33 @@
+<!-- extend base layout -->
+{% extends "layout.html" %}
+{% block content %}
+  <h1>My Devices:</h1>
+  <p></p>
+  <hr>
+  <form action="" method="post" name="editdevices">
+      {{form.hidden_tag()}}
+      {% if error %}
+      <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+  <table class="table">
+    <thead>
+        <tr>
+            <th>Alias</th>
+            <th>Description</th>
+        <tr>
+    </thead>
+    <tbody>
+      {% for d in my_devices %}
+      <tr>
+          <td>{{ d.alias }}</td>
+          <td>{{ d.description }}</td>
+          <td><a href="{{ url_for('editdevice', id=d.id) }}">Edit</a></td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+</p>
+</form>
+
+{% endblock %}

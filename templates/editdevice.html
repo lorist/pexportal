@@ -1,0 +1,31 @@
+<!-- extend base layout -->
+{% extends "layout.html" %}
+{% block content %}
+  <h3>My device password:</h3>
+  <p></p>
+  <hr>
+  <form action="" method="post" name="editdevice">
+      {{form.hidden_tag()}}
+      {% if error %}
+      <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+  <table class="table">
+    <thead>
+        <tr>
+            <th>Password</th>
+        <tr>
+    </thead>
+    <tbody>
+
+      <tr>
+          <td>{{ form.password }}</td>
+      </tr>
+      <tr><td><input type="submit" value="Save Changes"></td></tr>
+      <tr><td><i>Note: it can take up to a minute for changes to take effect.</i></td></tr>
+
+    </tbody>
+</table>
+</p>
+</form>
+
+{% endblock %}
