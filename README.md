@@ -76,4 +76,4 @@ Restart nginx:
 
 `sudo service nginx restart`
 
-Now browse to https://<your-RP-FQDN>/portal
+Now browse to `https://<your-RP-FQDN>/portal`
