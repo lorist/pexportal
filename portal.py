@@ -12,10 +12,6 @@ application = Flask(__name__)
 application.secret_key = 'pexdev key'
 application.debug = False
 
-application = Flask(__name__)
-application.secret_key = 'pexdev key'
-application.debug = False
-
 application.config['LDAP_HOST'] = 'ad.example.com.au'
 application.config['LDAP_BASE_DN'] = 'CN=Users,DC=example,DC=com,DC=au'
 application.config['LDAP_USERNAME'] = 'pexservice@example.com.au'
