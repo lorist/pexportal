@@ -21,7 +21,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">myVMR Portal</a>
+          <a class="navbar-brand" href="/portal/">myVMR Portal</a>
           <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/The_Westfield_Group_logo.svg/220px-The_Westfield_Group_logo.svg.png" height="50" width="150" alt=""> -->
           <img src="{{ url_for('static', filename='img/pexip-wordmark-RGB.png') }}" hspace="20" height="30" alt="">
         </div>
@@ -32,11 +32,11 @@
 
           <ul class="nav navbar-nav navbar-right">
             <!-- <li><a href="control">Control VMR</a></li> -->
-            <li><a href="registered">All Devices</a></li>
+            <li><a href="/portal/registered">All Devices</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Your VMR <b class="caret"></b></a>
+              <a href="/portal/" class="dropdown-toggle" data-toggle="dropdown">Your VMR <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="/">View VMR</a></li>
+                <li><a href="/portal/">View VMR</a></li>
                 <li><a href="{{ url_for('edit') }}">Edit VMR</a></li>
               </ul>
             </li>
@@ -48,7 +48,7 @@
                 <li><a href="https://docs.pexip.com/admin/connect_quick.htm">Pexip User Guides</a></li>
                 <!-- <li><a href="#">Something else here</a></li> -->
                 <li class="divider"></li>
-                <li><a href="#">Email your VMR details</a></li>
+                <!- <li><a href="#">Email your VMR details</a></li> -->
               </ul>
             </li>
             <li><a href="logout">Logout</a></li>
