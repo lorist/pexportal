@@ -5,7 +5,9 @@
   {% if error %}
   <p class=error><strong>Error:</strong> {{ error }}
 {% endif %}
-  <p>{% if user.id == g.user.id %}<a href="{{ url_for('edit') }}">Edit your VMR</a></p>{% endif %}
+<!-- https://vc.pexip.com.au/webapp/#/?conference=dennis.vmr&role=host&pin=3333&join=1&media=&name=dl -->
+  {% if user.id == g.user.id %}<span class="glyphicon glyphicon-eye-open"></span><a href="https://vc.pexip.com.au/webapp/?conference={% for alias in aliases %}{% if '@' in alias.alias %}{{alias.alias}}{% endif %}{% endfor %}&role=host{%if pin %}&pin={{pin}}{% endif %}&name={{user}}&join=1&media=" target="_blank">&nbsp;Control your VMR</a>{% endif %}
+  &nbsp;&nbsp;{% if user.id == g.user.id %}<span class="glyphicon glyphicon-edit"></span><a href="{{ url_for('edit') }}">&nbsp;Edit your VMR</a>{% endif %}
   <!-- <hr> -->
   <div class="table-responsive">
   <table class="table">
@@ -18,7 +20,7 @@
         Skype: sip://{{alias.alias}}
         WebRTC: https://vc.pexip.com.au/webapp/?conference={{alias.alias}}
         Pexip APP: pexip://{{alias.alias}}{% endif %}{% if alias.alias|int %}
-        Phone: +61 2 9810 4000 then enter {{alias.alias}} #{% endif %}{% endfor %}">Copy VMR to clipboard</button>
+        Phone: +61 2 9810 4000 then enter {{alias.alias}} #{% endif %}{% endfor %}"><span class="	glyphicon glyphicon-copy"></span>&nbsp;Copy VMR to clipboard</button>
       </td>
     <tr>
       <td><b>Host PIN:</b></td><td>{{pin}}</td>
@@ -52,14 +54,14 @@
     <tr>
       {% if '@' in alias.alias %}
         <td></td>
-        <td>Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></td><tr>
+        <td><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></td><tr>
         <td></td>
-        <td>WebRTC: <a href="https://vc.pexip.com.au/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></td><tr>
+        <td><i class="fa fa-chrome" aria-hidden="true"></i>&nbsp;WebRTC: <a href="https://vc.pexip.com.au/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></td><tr>
         <td></td>
-        <td>Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></td>
+        <td><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></td>
       {% endif %}
       {% if alias.alias|int %}
-        <tr><td></td><td>Phone: <a href="tel:+61 2 9810 4000">+61 2 9810 4000 then enter {{alias.alias}} #</a></td></tr>
+        <tr><td></td><td><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;Phone: <a href="tel:+61 2 9810 4000">+61 2 9810 4000 then enter {{alias.alias}} #</a></td></tr>
       {% endif %}
     </tr>
 
@@ -84,9 +86,9 @@
          <tr>
              <td>{{ d.alias }}</td>
              <td>{{ d.description }}</td>
-             <td><a href="{{ url_for('editmydevice', id=d.id) }}">Change Password</a></td>
+             <td><a href="{{ url_for('editmydevice', id=d.id) }}"><i class="fa fa-key" aria-hidden="true"></i>&nbsp;Change Password</a></td>
              {% if d.primary_owner_email_address %}
-             <td><a href="{{ url_for('emaildevice', id=d.id) }}">Email Me Details</a></td>
+             <td><a href="{{ url_for('emaildevice', id=d.id) }}"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email Me Details</a></td>
               {% else %}
               <td><i>No email address</i></td>
              {% endif %}
