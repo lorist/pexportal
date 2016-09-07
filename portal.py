@@ -29,6 +29,12 @@ mgr_address = "mgr.example.com.au"
 mgr_user = "admin"
 mgr_password = "password"
 
+ldap = LDAP(application)
+
+@application.errorhandler(404)
+def page_not_found(error):
+    return 'This route does not exist {}'.format(request.url), 404
+
 # def register_hooks(application):
 @application.before_request
 def before_request():
@@ -181,7 +187,7 @@ def flash_errors(form):
                 error
             ))
 
-@application.route('/edit', methods=['GET', 'POST'])
+@application.route('/portal/edit', methods=['GET', 'POST'])
 @ldap.login_required
 def edit():
     form = VMRForm()
@@ -200,7 +206,7 @@ def edit():
         # application.logger.info('Changing VMR: PIN: %s, GUEST_PIN: %s, HOST_VIEW: %s', pin, guest_pin, host_view, allow_guests)
         flash('Your changes have been saved.')
         # return redirect(url_for('edit'))
-        return redirect('/')
+        return redirect('/portal/')
     else:
         form.pin.data = g.conf_config['pin']
         form.guest_pin.data = g.conf_config['guest_pin']
@@ -210,7 +216,7 @@ def edit():
     return render_template('edit.html', form=form)
 
 
-@application.route('/editdevice/<int:id>', methods=['GET', 'POST'])
+@application.route('/portal/editdevice/<int:id>', methods=['GET', 'POST'])
 @ldap.login_required
 def editmydevice(id):
     device = (item for item in g.my_devices if item["id"] == id).next()
@@ -220,14 +226,14 @@ def editmydevice(id):
         password = form.password.data
         changeDevice(id=id , password=password)
         flash('Your changes have been saved.')
-        return redirect('/')
+        return redirect('/portal/')
     else:
         form.password.data = ''
         form.id.data = device['id']
         flash_errors(form)
     return render_template('editdevice.html', form=form, device=device)
 
-@application.route('/emaildevice/<int:id>', methods=['GET', 'POST'])
+@application.route('/portal/emaildevice/<int:id>', methods=['GET', 'POST'])
 @ldap.login_required
 def emaildevice(id):
     email_thing = "device"
@@ -236,9 +242,9 @@ def emaildevice(id):
         flash('You will receive an email shortly.')
     else:
         flash('This is not your device!')
-    return redirect('/')
+    return redirect('/portal/')
 
-@application.route('/')
+@application.route('/portal/')
 @ldap.login_required
 def user():
     user = g.username
@@ -262,7 +268,7 @@ def user():
                            name=name, pin=pin, guest_pin=guest_pin,
                            aliases=aliases, host_view=host_view, allow_guests=allow_guests, devices=devices)
 
-@application.route('/login', methods=['GET', 'POST'])
+@application.route('/portal/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if g.user:
@@ -276,12 +282,12 @@ def login():
             return 'Invalid credentials'
         else:
             session['user_id'] = request.form['user']
-            return redirect('/')
+            return redirect('/portal/')
     return render_template('login.html',
                            title='Sign In',
                            form=form)
 
-@application.route('/registered')
+@application.route('/portal/registered')
 @ldap.login_required
 def registered():
     registered = getRegistered()
@@ -290,7 +296,7 @@ def registered():
     return render_template('registered.html',
                            registered=registered)
 
-@application.route('/mydevices')
+@application.route('/portal/mydevices')
 @ldap.login_required
 def mydevices():
     user = g.username
@@ -299,12 +305,12 @@ def mydevices():
     application.logger.info('MYDEVICES:  %s', mydevices)
     return render_template('devices.html',  mydevices=mydevices)
 
-@application.route('/group')
+@application.route('/portal/group')
 @ldap.group_required(groups=['Web Developers', 'pexAdmin'])
 def group():
     return 'Group restricted page'
 
-@application.route('/logout')
+@application.route('/portal/logout')
 def logout():
     session.pop('user_id', None)
     # session.pop('logged_in', None)
