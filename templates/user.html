@@ -6,8 +6,15 @@
   <p class=error><strong>Error:</strong> {{ error }}
 {% endif %}
 <!-- https://vc.pexip.com.au/webapp/#/?conference=dennis.vmr&role=host&pin=3333&join=1&media=&name=dl -->
-  {% if user.id == g.user.id %}<span class="glyphicon glyphicon-eye-open"></span><a href="https://vc.pexip.com.au/webapp/?conference={% for alias in aliases %}{% if '@' in alias.alias %}{{alias.alias}}{% endif %}{% endfor %}&role=host{%if pin %}&pin={{pin}}{% endif %}&name={{user}}&join=1&media=" target="_blank">&nbsp;Control your VMR</a>{% endif %}
-  &nbsp;&nbsp;{% if user.id == g.user.id %}<span class="glyphicon glyphicon-edit"></span><a href="{{ url_for('edit') }}">&nbsp;Edit your VMR</a>{% endif %}
+  {% if user.id == g.user.id %}
+    <span class="glyphicon glyphicon-eye-open"></span>
+    <a href="https://vc.pexip.com.au/webapp/?conference={% for alias in aliases %}{% if '@' in alias.alias %}{{alias.alias}}{% endif %}{% endfor %}&role=host{%if pin %}&pin={{pin}}{% endif %}&name={{user}}&join=1&media=" target="_blank">&nbsp;Control your VMR</a>
+  &nbsp;&nbsp;
+  <span class="glyphicon glyphicon-edit"></span>
+  <a href="{{ url_for('edit') }}">&nbsp;Edit your VMR</a>
+  &nbsp;&nbsp;
+  <td><a href="{{ url_for('emailvmr', id=conf_id) }}"><span class="fa fa-envelope" aria-hidden="true"></span>&nbsp;Email Me VMR Details</a></td>
+  {% endif %}
   <!-- <hr> -->
   <div class="table-responsive">
   <table class="table">
@@ -72,6 +79,7 @@
   </table>
 </div>
   <hr>
+  {% if devices %}
   <div class="table-responsive">
   <h3>Devices for user: {{user|capitalize}} </h3>
    <table class="table">
@@ -99,4 +107,5 @@
  </table>
  <hr>
  </div>
+ {% endif %}
 {% endblock %}
