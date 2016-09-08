@@ -95,7 +95,7 @@ def getVMRconfig(conf_url):
             verify=False
             )
         vmr_config = json.loads(response.text)
-        application.logger.info('search conf_url result:  %s', vmr_config)
+        application.logger.info('search config result:  %s', vmr_config)
         return vmr_config
     except requests.exceptions.ConnectionError as e:
         return render_template('/error.html', error={'msgs': ['Connection to server failed.', 'Is it a valid domain?']})
@@ -121,6 +121,7 @@ def changeDevice(id, **kwargs):
         try:
             response = requests.patch(
                 url, auth=(mgr_user, mgr_password), verify=False, data=json.dumps(kwargs))
+            application.logger.debug('MGR PATCH Sending for ID: %s', id)
             return
         except requests.exceptions.ConnectionError as e:
             return render_template('/error.html', error={'msgs': ['Connection to server failed.', 'Is it a valid domain?']})
@@ -129,19 +130,21 @@ def emailMe(id, email_thing):
     if email_thing is not None:
         if 'conf' in email_thing:
             send_what = 'send_conference_email'
+            thing_id = 'conference_id'
         if 'device' in email_thing:
             send_what = 'send_device_email'
-            application.logger.info('Sending %s for ID: %s', send_what, id)
-            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-            url = "https://%s/api/admin/command/v1/conference/%s/" % (mgr_address, send_what)
-            try:
-                application.logger.info('EMAIL URL: %s', url)
-                response = requests.post(
-                    url, auth=(mgr_user, mgr_password), verify=False, data=json.dumps({'device_id':id}))
-                application.logger.info('RESPONSE: %s', response)
-                return
-            except requests.exceptions.ConnectionError as e:
-                return render_template('/error.html', error={'msgs': ['Connection to server failed.', 'Is it a valid domain?']})
+            thing_id = 'device_id'
+        application.logger.info('Sending %s for %s: %d', send_what, thing_id, id)
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+        url = "https://%s/api/admin/command/v1/conference/%s/" % (mgr_address, send_what)
+        try:
+            application.logger.debug('EMAIL URL: %s', url)
+            response = requests.post(
+                url, auth=(mgr_user, mgr_password), verify=False, data=json.dumps({thing_id:id}))
+            application.logger.debug('RESPONSE: %s', response)
+            return
+        except requests.exceptions.ConnectionError as e:
+            return render_template('/error.html', error={'msgs': ['Connection to server failed.', 'Is it a valid domain?']})
 
 def getRegistered():
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -153,7 +156,7 @@ def getRegistered():
             verify=False
             )
         registered = json.loads(response.text)['objects']
-        # application.logger.info('search registered result:  %s', registered)
+        application.logger.debug('MGR LOOKUP search registered result:  %s', registered)
         return registered
     except requests.exceptions.ConnectionError as e:
         return render_template('/error.html', error={'msgs': ['Connection to server failed.', 'Is it a valid domain?']})
@@ -168,7 +171,7 @@ def getDevices(username): #my devices
             verify=False
             )
         devices = json.loads(response.text)['objects']
-        # application.logger.info('search registered result:  %s', registered)
+        application.logger.info('MGR LOOKUP getDevices result:  %s', devices)
         return devices
 
     except requests.exceptions.ConnectionError as e:
@@ -240,6 +243,17 @@ def emaildevice(id):
         flash('This is not your device!')
     return redirect('/portal/')
 
+@application.route('/portal/emailvmr/<int:id>', methods=['GET', 'POST'])
+@ldap.login_required
+def emailvmr(id):
+    email_thing = "conf"
+    if (item for item in g.conf_config if item["id"] == id):
+        emailMe(id, email_thing)
+        flash('You will receive an email shortly.')
+    else:
+        flash('This is not your VMR!')
+    return redirect('/portal/')
+
 @application.route('/portal/')
 @ldap.login_required
 def user():
@@ -249,6 +263,7 @@ def user():
         return redirect(url_for('index'))
     # application.logger.debug('config results: (%s)', g.conf_config)
     config = g.conf_config
+    conf_id = config['id']
     name = config['name']
     pin = config['pin']
     guest_pin = config['guest_pin']
@@ -260,7 +275,7 @@ def user():
     # devices = getDevices(user)
     application.logger.info('my devices result:  %s', devices)
     return render_template('user.html',
-                           user=user,
+                           user=user, conf_id=conf_id,
                            name=name, pin=pin, guest_pin=guest_pin,
                            aliases=aliases, host_view=host_view, allow_guests=allow_guests, devices=devices)
 
