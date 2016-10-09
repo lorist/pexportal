@@ -86,10 +86,13 @@ To change the site background image, you can edit the style.css file and point t
 nano /home/pexip/portal/static/css/style.css
 ```
 To point to a public URL, add a URL to the `background` statement at the top of the file:
+
 `background:url('http://www.wallpaperup.com/uploads/wallpapers/2012/10/21/20181/cad2441dd3252cf53f12154412286ba0.jpg');`
 
 To point to a file locally, upload the file to the /home/pexip/portal/static/img and add the file name to the `background` statement at the top of the file:
+
 `background:url('/static/img/<your-filename>.jpg');`
 
 To change the logo image that appears at the top left of the page, upload your new image to the /home/pexip/portal/static/img directory. Then edit the /home/pexip/portal/templates/layout.html file and change the file name to relect your new file:
+
 `<img src="{{ url_for('static', filename='img/pexip-wordmark-RGB.png') }}" hspace="20" height="30" alt="">`
