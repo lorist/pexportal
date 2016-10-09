@@ -10,20 +10,13 @@ from PIL import Image, ImageFont, ImageOps, ImageDraw
 
 application = Flask(__name__)
 application.secret_key = 'pexdev key'
-application.debug = False
-
-application.config['LDAP_HOST'] = 'ad.example.com.au'
-application.config['LDAP_BASE_DN'] = 'CN=Users,DC=example,DC=com,DC=au'
-application.config['LDAP_USERNAME'] = 'pexservice@example.com.au'
-
-application.config['LDAP_PASSWORD'] = 'Mypexservicepwd'
-application.config['LDAP_USER_OBJECT_FILTER'] = '(&(objectCategory=person)(objectClass=user) (sAMAccountName=%s))'
+application.debug = True
 application.config['LDAP_LOGIN_VIEW'] = 'login'
+application.config.from_object('config')
 
-# Pexip management node info:
-mgr_address = "mgr.example.com.au"
-mgr_user = "admin"
-mgr_password = "password"
+mgr_address = application.config['MGR_ADDRESS']
+mgr_user = application.config['MGR_USER']
+mgr_password = application.config['MGR_PASSWORD']
 
 ldap = LDAP(application)
 
@@ -254,6 +247,7 @@ def emailvmr(id):
         flash('This is not your VMR!')
     return redirect('/portal/')
 
+
 @application.route('/portal/')
 @ldap.login_required
 def user():
@@ -277,7 +271,8 @@ def user():
     return render_template('user.html',
                            user=user, conf_id=conf_id,
                            name=name, pin=pin, guest_pin=guest_pin,
-                           aliases=aliases, host_view=host_view, allow_guests=allow_guests, devices=devices)
+                           aliases=aliases, host_view=host_view, allow_guests=allow_guests,
+                           devices=devices)
 
 @application.route('/portal/login', methods=['GET', 'POST'])
 def login():
