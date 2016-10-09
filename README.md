@@ -36,7 +36,7 @@ Copy the uWsgi configuration file to correct location:
 
 `sudo cp /home/pexip/portal/portal.conf /etc/init/`
 
-Edit the portal.py file and adjust the AD and Pexip management information at the top of the file to suit your environment
+Edit the config.py file and adjust the AD and Pexip management information at the top of the file to suit your environment
 
 
 Service commands:
