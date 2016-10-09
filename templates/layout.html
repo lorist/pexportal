@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
-    <!-- <script src="{{ url_for('static', filename='js/control.js') }}" type="text/javascript"></script> -->
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
     <link href="{{ url_for('static', filename='css/logo-nav.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -24,7 +23,6 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/portal/">myVMR Portal</a>
-          <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/The_Westfield_Group_logo.svg/220px-The_Westfield_Group_logo.svg.png" height="50" width="150" alt=""> -->
           <img src="{{ url_for('static', filename='img/pexip-wordmark-RGB.png') }}" hspace="20" height="30" alt="">
         </div>
 
@@ -33,7 +31,6 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <!-- <li><a href="control">Control VMR</a></li> -->
             <!-- <li><a href="/portal/registered">All Devices</a></li> -->
             <li class="dropdown">
               <a href="/portal/" class="dropdown-toggle" data-toggle="dropdown">Your VMR <b class="caret"></b></a>
@@ -45,7 +42,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Useful Links <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="https://vc.pexip.com.au">WebRTC Page</a></li>
+                <li><a href="https://{{config.WEBRTC_FQDN}}">WebRTC Page</a></li>
                 <li><a href="http://youtube.pexip.com/">Stream to YouTube</a></li>
                 <li><a href="https://docs.pexip.com/admin/connect_quick.htm">Pexip User Guides</a></li>
                 <!-- <li><a href="#">Something else here</a></li> -->
