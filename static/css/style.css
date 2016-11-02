@@ -1,8 +1,8 @@
 body{
   /*background:url('http://coolblackppt.com/wp-content/uploads/orange-textile-20150511060948-555047ac01cbe.jpg');*/
   /*background:url('http://www.wallpaperup.com/uploads/wallpapers/2012/10/21/20181/cad2441dd3252cf53f12154412286ba0.jpg');*/
-  background:url('/static/img/mb-sand.jpg');
-  background-color: grey;
+  /*background:url('/static/img/mb-sand.jpg');*/
+  /*background-color: grey;*/
   padding:50px;
 }
 .container-main {
@@ -33,3 +33,65 @@ h2 {color: red;}
   color: green;
   background-color: #ffff42;
 }
+
+/* select image */
+label > input{ /* HIDE RADIO */
+  visibility: hidden; /* Makes input not-clickable */
+  position: absolute; /* Remove input from document flow */
+}
+label > input + img{ /* IMAGE STYLES */
+  cursor:pointer;
+  border:10px solid transparent;
+}
+label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+  border:10px solid #f00;
+}
+
+/*select image two*/
+.cc-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+.one_main_seven_pips{background-image:url(/static/img/one_main_seven_pips.png);}
+.one_main_zero_pips{background-image:url(/static/img/one_main_zero_pips.png);}
+.two_mains_twentyone_pips{background-image:url(/static/img/two_mains_twentyone_pips.png);}
+.one_main_twentyone_pips{background-image:url(/static/img/one_main_twentyone_pips.png);}
+
+.cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:150px;height:108px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(2) grayscale(1) opacity(.7);
+       -moz-filter: brightness(2) grayscale(1) opacity(.7);
+            filter: brightness(2) grayscale(1) opacity(.7);
+}
+.drinkcard-cc:hover{
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+            filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
+/* Extras */
+a:visited{color:#888}
+a{color:#444;text-decoration:none;}
+p{margin-bottom:.3em;}
+
+.left_button {
+/*color:white;*/
+display: block;
+margin: 30px;
+padding: 7px 35px;
+/*font: 300 150% langdon;*/
