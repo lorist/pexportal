@@ -18,3 +18,6 @@ MGR_PASSWORD = 'yourpassword'
 CONTROL_YOUR_VMR_FQDN = 'meet.customer.com' #FQDN or IP of conference node or RP for webRTC. The 'Control your VMR' link
 WEBRTC_FQDN = 'meet.customer.com' #FQDN or IP of conference node or RP for webRTC. Appears in webRTC links and 'Copy to clipboard'
 PHONE_VR = '+6183100000'
+
+####### User Theme permissions:
+ALLOW_THEMES = [1,2,3,4] # IDs of pin themes allowed to be set by users for thier VMRs
