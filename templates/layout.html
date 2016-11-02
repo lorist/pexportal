@@ -9,61 +9,62 @@
     <link href="{{ url_for('static', filename='css/logo-nav.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
     <!-- <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"> -->
-
   </head>
   <body {% block body_attrs %}{% endblock %}>
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <!-- <nav class="navbar navbar-inverse" role="navigation">   -->
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/portal/">myVMR Portal</a>
-          <img src="{{ url_for('static', filename='img/pexip-wordmark-RGB.png') }}" hspace="20" height="30" alt="">
-        </div>
+  <div class="container-fluid">
+<div class="row">
+<div class="col-md-12">
+  <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="navbar-header">
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-          </ul>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+         <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+      </button><img class="navbar-brand" src="{{ url_for('static', filename='img/pexip-wordmark-RGB.png') }}" hspace="50" height="20" alt="">
+    </div>
 
-          <ul class="nav navbar-nav navbar-right">
-            <!-- <li><a href="/portal/registered">All Devices</a></li> -->
-            <li class="dropdown">
-              <a href="/portal/" class="dropdown-toggle" data-toggle="dropdown">Your VMR <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="/portal/">View VMR</a></li>
-                <li><a href="{{ url_for('edit') }}">Edit VMR</a></li>
-              </ul>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav navbar-right">
+
+        <li class="dropdown">
+           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Useful Links<strong class="caret"></strong></a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="https://{{config.WEBRTC_FQDN}}">WebRTC Page</a>
             </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Useful Links <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="https://{{config.WEBRTC_FQDN}}">WebRTC Page</a></li>
-                <li><a href="http://youtube.pexip.com/">Stream to YouTube</a></li>
-                <li><a href="https://docs.pexip.com/admin/connect_quick.htm">Pexip User Guides</a></li>
-                <!-- <li><a href="#">Something else here</a></li> -->
-                <li class="divider"></li>
-              </ul>
+            <li>
+              <a href="http://youtube.pexip.com/">Stream to YouTube</a></li>
             </li>
-            <li><a href="/portal/logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Logout</a></li>
+            <li>
+              <a href="https://docs.pexip.com/admin/connect_quick.htm">Pexip User Guides</a>
+            </li>
           </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
-    <div class="container-main">
+        </li>
+        <li>
+          <a href="/portal/logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </li>
+      </ul>
+    </div>
+
+  </nav>
+    <!-- <div class="container-main"> -->
+    <div>
       <br>
       {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <p class=flashes>
-        {% for message in messages %}
-          <b>&#9733; {{ message }}</b>
-        {% endfor %}
-      </p>
-      {% endif %}
+        {% if messages %}
+          <!-- <p class=error><strong>Error:</strong> {{ error }} -->
+          <div class="alert alert-info alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+              ×
+            </button>
+            <h4>
+              Alert!
+            </h4> <strong>Success!</strong>
+            {% for message in messages %}
+              {{ message }}
+            {% endfor %}
+          </div>
+        {% endif %}
       {% endwith %}
       {% block content %}
       {% endblock %}
