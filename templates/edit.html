@@ -6,16 +6,21 @@
   ('one_main_zero_pips.png')] %}
 
 {% block content %}
-  <h3>Edit Your VMR</h3>
-  <hr>
 
+<div class="row">
+  <div class="col-md-2">
+    <div class="list-group">
+      <a class="list-group-item" href="/portal" data-toggle="modal"> <i class="fa fa-home fa-fw" aria-hidden="true"></i>&nbsp; Home</a>
+    </div>
+  </div>
+  <div class="col-md-4">
   <form action="" method="post" name="edit">
       {{form.hidden_tag()}}
       {% if error %}
       <p class=error><strong>Error:</strong> {{ error }}
     {% endif %}
     <div class="table-responsive">
-      <table class="table">
+      <table class="table table-striped">
           <th>PINS:</th>
           <tr>
               <td>Host PIN:</td>
@@ -29,27 +34,34 @@
             <td><b>Guest PIN:</b></td><td>{{ form.guest_pin(size=5) }}</td>
           </tr>
           {%endif%}
-          <th>Layout:</th>
-          <tr>
-            <td><img src="{{ url_for('static', filename='img/one_main_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;"></td>
-            <td><img src="{{ url_for('static', filename='img/two_main_twentyone_pips.png') }}" alt="2+21" style="width:150px;height:108px;"></td>
-            <td><img src="{{ url_for('static', filename='img/one_main_zero_pips.png') }}" alt="1+0" style="width:150px;height:108px;"></td>
-            <td><img src="{{ url_for('static', filename='img/one_main_seven_pips.png') }}" alt="1+7" style="width:150px;height:108px;"></td>
-          </tr>
-          <tr>
-              <!-- <td>Conference<br>View:</td> -->
 
-              {% for field in form.host_view %}
-                <td>{{field}} {{field.label}}
-                </td>
-              {% endfor %}
-
-          </tr>
+          <!-- <th>Theme:</th>
+            <td colspan="2">{{ form.ivr_theme }}</td> -->
           </table>
+          <!-- <b>Theme</b> {{ form.ivr_theme }} -->
         </div>
           <hr>
           <input type="submit" value="Save Changes">
-          <i>Note: it can take up to a minute for changes to take effect.</i>
-  </form>
+          <p><i>Note: it can take up to a minute for changes to take effect.</i></p>
 
+  </div>
+    <div class="col-md-6">
+      <h4 style="text-align: center;">Conference View:</h4>
+    </div>
+    <div class="cc-selector">
+      <div class="col-md-2">
+       <input id="one_main_twentyone_pips" type="radio" name="host_view" value="one_main_twentyone_pips" {{"checked" if form.host_view.data == "one_main_twentyone_pips"}} />
+       <label class="drinkcard-cc one_main_twentyone_pips" for="one_main_twentyone_pips"></label>
+       <input id="two_mains_twentyone_pips" type="radio" name="host_view" value="two_mains_twentyone_pips" {{"checked" if form.host_view.data == "two_mains_twentyone_pips"}}/>
+       <label class="drinkcard-cc two_mains_twentyone_pips"for="two_mains_twentyone_pips"></label>
+      </div>
+      <div class="col-md-2">
+       <input id="one_main_zero_pips" type="radio" name="host_view" value="one_main_zero_pips" {{"checked" if form.host_view.data == "one_main_zero_pips"}} />
+       <label class="drinkcard-cc one_main_zero_pips" for="one_main_zero_pips"></label>
+       <input id="one_main_seven_pips" type="radio" name="host_view" value="one_main_seven_pips" {{"checked" if form.host_view.data == "one_main_seven_pips"}} />
+       <label class="drinkcard-cc one_main_seven_pips"for="one_main_seven_pips"></label>
+     </div>
+   </div>
+  </form>
+ </div>
 {% endblock %}
