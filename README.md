@@ -1,6 +1,10 @@
 # pexportal
 Self service web portal for Pexip VMRs and Devices created by AD Sync
 Requires Pexip version 13 or later
+![alt tag](https://raw.githubusercontent.com/lorist/pexportal/master/portal-user.png)
+
+![alt tag](https://raw.githubusercontent.com/lorist/pexportal/master/portal-edit.png)
+
 
 ## Installation on Pexip RP server
 
