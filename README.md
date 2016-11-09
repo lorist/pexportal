@@ -32,6 +32,9 @@ Install required modules within the virtual environment:
 
 `pip install -r /home/pexip/portal/requirements.txt`
 
+If the RP has no internet access:
+`pip install --no-index --find-links=file:/home/pexip/portal/requirements -r /home/pexip/portal/requirements.txt`
+
 Copy the uWsgi configuration file to correct location:
 
 `sudo cp /home/pexip/portal/portal.conf /etc/init/`
