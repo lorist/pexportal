@@ -54,6 +54,28 @@ Service commands:
 * sudo restart portal
 * sudo stop portal
 
+## Upgrading to current version
+If the portal is running, stop it by running: `sudo stop portal`
+
+Copy the current working files as a backup:
+
+`cp -r /home/pexip/portal /home/pexip/portal-backup`
+
+Pull down the latest code from github:
+
+`git fetch origin`
+
+Then apply:
+
+`git reset --hard origin/master`
+
+Note that this will pull down the default config.py file, so you will either need to re-edit the file to suit your environment or copy the originaly file back. Here is how to copy from your backup:
+
+`rm /home/pexip/portal/config.py && cp /home/pexip/portal-backup/config.py /home/pexip/portal/`
+
+Now you can start it again: `sudo start portal`
+
+
 ## Nginx config
 
 Add the relevant configuration to the pexapp file:
