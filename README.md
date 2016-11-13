@@ -5,8 +5,42 @@ Requires Pexip version 13 or later
 
 ![alt tag](https://raw.githubusercontent.com/lorist/pexportal/master/portal-edit.png)
 
+## Pre-built Pexip RP image with portal installed:
+---
 
-## Installation on Pexip RP server
+Pre-installed OVA: https://s3-eu-west-1.amazonaws.com/pexeushare/pexPortal.ova
+
+MD5 (pexPortal.ova) = 7ac925b962a0036a911072714b24e201
+
+1/ Deploy the OVA
+
+2/ Via VMWare console login using username: pexip password: PEXIP
+    Complete the RP form questions. The RP will reboot
+
+3/ Via VMWare console or ssh (pexip@<rp-ip-address>) stop the portal:
+
+    `sudo stop portal`
+
+4/ Edit the portal config file to suit your local environment:
+
+`nano /home/pexip/portal/config.py`
+
+Save:
+
+`CRTL-X the enter`
+
+hint: if you are using FQDN names for the AD server and Management node, make sure that you have entered a DNS server in step 2 that can resolve the internal addresses
+
+5/ Start the portal:
+
+`sudo start portal`
+
+Now browse to `https://<your-address>/portal`
+
+That's it, you're done. If you want to install manually follow the procedure below.
+
+## Manual installation on Pexip RP server:
+---
 
 Install git:
 
@@ -55,6 +89,7 @@ Service commands:
 * sudo stop portal
 
 ## Upgrading to current version
+---
 If the portal is running, stop it by running: `sudo stop portal`
 
 Copy the current working files as a backup:
@@ -75,8 +110,8 @@ Note that this will pull down the default config.py file, so you will either nee
 
 Now you can start it again: `sudo start portal`
 
-
 ## Nginx config
+---
 
 Add the relevant configuration to the pexapp file:
 
@@ -110,8 +145,9 @@ Restart nginx:
 
 Now browse to `https://<your-RP-FQDN>/portal`
 
-## Change the logo image
 
+## Change the logo image
+---
 
 To change the logo image that appears at the top left of the page, upload your new image to the /home/pexip/portal/static/img directory. Then edit the /home/pexip/portal/templates/layout.html file and change the file name to relect your new file:
 
