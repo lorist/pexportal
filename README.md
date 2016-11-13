@@ -26,11 +26,11 @@ Install Python Virtual Environment:
 
 Create the Portal's virtual environment:
 
-`cd /home/pexip/portal/ && virtualenv portalvenv`
+`cd /home/pexip && virtualenv portalvenv`
 
 Avtivate the virtual environment:
 
-`source /home/pexip/portal/portalvenv/bin/activate`
+`source /home/pexip/portalvenv/bin/activate`
 
 Install required modules within the virtual environment:
 
