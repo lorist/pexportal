@@ -18,7 +18,7 @@
   <div class="col-md-2">
     <div class="list-group">
       <a class="list-group-item" href="#modal-container-841027" data-toggle="modal"> <i class="fa fa-tablet fa-fw" aria-hidden="true"></i>&nbsp; My Devices</a>
-      <a class="list-group-item" href="https://{{config.CONTROL_YOUR_VMR_FQDN}}/webapp/?conference={% for alias in aliases %}{% if '@' in alias.alias %}{{alias.alias}}{% endif %}{% endfor %}&role=host{%if pin %}&pin={{pin}}{% endif %}&name={{user}}&join=1&media=" target="_blank"><i class="fa fa-gamepad fa-fw" aria-hidden="true"></i>&nbsp; Control VMR</a>
+      <a class="list-group-item" href="https://{{config.CONTROL_YOUR_VMR_FQDN}}/webapp/?conference={{ aliases[0].alias }}&role=host{%if pin %}&pin={{pin}}{% endif %}&name={{user}}&join=1&media=" target="_blank"><i class="fa fa-gamepad fa-fw" aria-hidden="true"></i>&nbsp; Control VMR</a>
       <a class="list-group-item" href="{{ url_for('emailvmr', id=conf_id) }}"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i>&nbsp; Email Me VMR</a>
       <a class="list-group-item" href="{{ url_for('edit') }}"><i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; Edit VMR</a>
     </div>
