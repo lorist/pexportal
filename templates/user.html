@@ -64,33 +64,34 @@
         Phone: {{config.PHONE_VR}} then enter {{alias.alias}} #{% endif %}{% endfor %}"><span class="	glyphicon glyphicon-copy"></span>&nbsp;Copy VMR to clipboard</button>
   </div>
 
-  <div class="col-md-4">
-    <table class="table table-striped">
-      <tr>
-          <th  colspan="3">Aliases:</th>
-      </tr>
 
+<div class="panel-group col-md-4">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#collapse1">Aliases (click to dial)</a>
+      </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse">
+      <ul class="list-group">
       {% for alias in aliases %}
-      <tr>
         {% if '@' in alias.alias %}
-          <td></td>
-          <td><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></td><tr>
-          <td></td>
-          <td><i class="fa fa-chrome" aria-hidden="true"></i>&nbsp;WebRTC: <a href="https://{{config.WEBRTC_FQDN}}/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></td><tr>
-          <td></td>
-          <td><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></td>
+          <li class="list-group-item"><i class="fa fa-chrome" aria-hidden="true"></i>&nbsp;WebRTC: <a href="https://{{config.WEBRTC_FQDN}}/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></li>
+          <li class="list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></li>
+          <li class="list-group-item"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></li>
         {% endif %}
         {% if alias.alias|int %}
-          <tr><td></td><td><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;Phone: <a href="tel:{{config.PHONE_VR}},,{{alias.alias}}">{{config.PHONE_VR}} then enter {{alias.alias}} #</a></td></tr>
+        <li class="list-group-item"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;Phone: <a href="tel:{{config.PHONE_VR}},,{{alias.alias}}">{{config.PHONE_VR}} then enter {{alias.alias}} #</a></li>
         {% endif %}
-      </tr>
 
       {% endfor %}
-      </tr>
-      </td>
-      <tr></tr>
-    </table>
+      </ul>
+      <div class="panel-footer"></div>
+    </div>
   </div>
+</div>
+
+
   <div class="col-md-2">
     {%if thumbnailstring %}<img src="data:image/png;base64,{{thumbnailstring}}" width="70">{% endif %} <h3>{{user|capitalize}}</h3>
   </div>
@@ -142,9 +143,6 @@
        <button type="button" class="btn btn-default" data-dismiss="modal">
          Close
        </button>
-       <!-- <button type="button" class="btn btn-primary">
-         Save changes
-       </button> -->
      </div>
    </div>
 
