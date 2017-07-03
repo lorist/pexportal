@@ -21,3 +21,10 @@ PHONE_VR = '+6183100000'
 
 ####### User Theme permissions (future):
 ALLOW_THEMES = [1,2,3,4] # IDs of pin themes allowed to be set by users for thier VMRs
+
+####### Display Scheduled and Devices tabs:
+SCHEDULING = 'true' #set to 'true' if you have Pexip scheduling enabled and want to experiment. Note that this feature is not tested beyond a small number of scheduled meetings
+DEVICES = 'true' # set to true if you have devices enabled for users
+
+###### Log file name:
+LOG_FILENAME = 'portal.log'
