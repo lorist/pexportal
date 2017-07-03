@@ -16,27 +16,28 @@
   <div class="col-md-4">
   <form action="" method="post" name="edit">
       {{form.hidden_tag()}}
-      {% if error %}
-      <p class=error><strong>Error:</strong> {{ error }}
-    {% endif %}
+
     <div class="table-responsive">
       <table class="table table-striped">
-          <th>PINS:</th>
+          <th colspan="2">PINS:</th>
           <tr>
               <td>Host PIN:</td>
               <td>{{ form.pin(size=5) }}</td>
+              {%if form.allow_guests %}
+              <tr>
+                <td>Guest PIN:</td>
+
+              <td>{{ form.guest_pin(size=5) }}</td>
+              </tr>
+              {%endif%}
           </tr>
+
           <tr>
             <td><b>Allow Guests</b></td><td>{{ form.allow_guests}}</td>
           </tr>
-          {%if form.allow_guests %}
           <tr>
-            <td><b>Guest PIN:</b></td><td>{{ form.guest_pin(size=5) }}</td>
-          </tr>
-          {%endif%}
-
-          <!-- <th>Theme:</th>
-            <td colspan="2">{{ form.ivr_theme }}</td> -->
+            <td><b>Guests Can Present</b></td><td>{{ form.guests_can_present}}</td>
+          </tr>     
           </table>
           <!-- <b>Theme</b> {{ form.ivr_theme }} -->
         </div>
