@@ -1,154 +1,264 @@
 <!-- extend base layout -->
 {% extends "layout.html" %}
 {% block content %}
-{% if error %}
-  <p class=error><strong>Error:</strong> {{ error }}
-    {% if user.id == g.user.id %}
-      <span class="glyphicon glyphicon-eye-open"></span>
-      <a href="https://{{config.CONTROL_YOUR_VMR_FQDN}}/webapp/?conference={% for alias in aliases %}{% if '@' in alias.alias %}{{alias.alias}}{% endif %}{% endfor %}&role=host{%if pin %}&pin={{pin}}{% endif %}&name={{user}}&join=1&media=" target="_blank">&nbsp;Control your VMR</a>
-    &nbsp;&nbsp;
-    <span class="glyphicon glyphicon-edit"></span>
-    <a href="{{ url_for('edit') }}">&nbsp;Edit your VMR</a>
-    &nbsp;&nbsp;
-    <td><a href="{{ url_for('emailvmr', id=conf_id) }}"><span class="fa fa-envelope" aria-hidden="true"></span>&nbsp;Email Me VMR Details</a></td>
-    {% endif %}
 
-{% endif %}
-<div class="row">
-  <div class="col-md-2">
-    <div class="list-group">
-      <a class="list-group-item" href="#modal-container-841027" data-toggle="modal"> <i class="fa fa-tablet fa-fw" aria-hidden="true"></i>&nbsp; My Devices</a>
-      <a class="list-group-item" href="https://{{config.CONTROL_YOUR_VMR_FQDN}}/webapp/?conference={{ aliases[0].alias }}&role=host{%if pin %}&pin={{pin}}{% endif %}&name={{user}}&join=1&media=" target="_blank"><i class="fa fa-gamepad fa-fw" aria-hidden="true"></i>&nbsp; Control VMR</a>
-      <a class="list-group-item" href="{{ url_for('emailvmr', id=conf_id) }}"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i>&nbsp; Email Me VMR</a>
-      <a class="list-group-item" href="{{ url_for('edit') }}"><i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; Edit VMR</a>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <table class="table table-striped">
-      <!-- <col width="110"> -->
-      <td><b>Name:</b></td><td>{{name}}</td>
-      <tr>
-        <td><b>Host PIN:</b></td><td>{{pin}}</td>
-      </tr>
-      <tr>
-        <td><b>Allow Guests</b></td><td>{{allow_guests}}</td>
-      </tr>
-      {%if allow_guests and guest_pin%}
-      <tr>
-        <td><b>Guest PIN:</b></td><td>{{guest_pin}}</td>
-      </tr>
-      {%endif%}
-      <th>View: </th>
-
-      {%if host_view == "one_main_seven_pips" %}
-        <td><img src="{{ url_for('static', filename='img/one_main_seven_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
-      {%endif%}</td>
-      {%if host_view == "one_main_twentyone_pips" %}
-        <td><img src="{{ url_for('static', filename='img/one_main_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
-      {%endif%}</td>
-      {%if host_view == "one_main_zero_pips" %}
-        <td><img src="{{ url_for('static', filename='img/one_main_zero_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
-      {%endif%}</td>
-      {%if host_view == "two_mains_twentyone_pips" %}
-        <td><img src="{{ url_for('static', filename='img/two_mains_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
-      {%endif%}</td>
-      <tr>
-    </table>
-    <button class="btn btn-default" style="float: left;" data-clipboard-text="
-    Please meet {{user|capitalize}} in myVMR:
-        Ways to connect:{% for alias in aliases %}{% if '@' in alias.alias %}
-        {% if guest_pin %}PIN Number: {{guest_pin}}{% endif %}
-        Skype: sip://{{alias.alias}}
-        WebRTC: https://{{config.WEBRTC_FQDN}}/webapp/?conference={{alias.alias}}
-        Pexip APP: pexip://{{alias.alias}}{% endif %}{% if alias.alias|int %}
-        Phone: {{config.PHONE_VR}} then enter {{alias.alias}} #{% endif %}{% endfor %}"><span class="	glyphicon glyphicon-copy"></span>&nbsp;Copy VMR to clipboard</button>
-  </div>
-
-
-<div class="panel-group col-md-4">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" href="#collapse1">Aliases (click to dial)</a>
-      </h4>
-    </div>
-    <div id="collapse1" class="panel-collapse collapse">
-      <ul class="list-group">
-      {% for alias in aliases %}
-        {% if '@' in alias.alias %}
-          <li class="list-group-item"><i class="fa fa-chrome" aria-hidden="true"></i>&nbsp;WebRTC: <a href="https://{{config.WEBRTC_FQDN}}/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></li>
-          <li class="list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></li>
-          <li class="list-group-item"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></li>
-        {% endif %}
-        {% if alias.alias|int %}
-        <li class="list-group-item"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;Phone: <a href="tel:{{config.PHONE_VR}},,{{alias.alias}}">{{config.PHONE_VR}} then enter {{alias.alias}} #</a></li>
-        {% endif %}
-
-      {% endfor %}
-      </ul>
-      <div class="panel-footer"></div>
-    </div>
-  </div>
+<div class="col-md-1">
+  {%if thumbnailstring %}<img src="data:image/png;base64,{{thumbnailstring}}" width="70">{% endif %} <h4>{{user|capitalize}}</h4>
 </div>
+<div class="col-md-10 container">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">My Permanent VMRs <span class="badge">{{vmr_count - scheduled_count}}</span></a></li>
+    {% if config.SCHEDULING == 'true' %}<li><a data-toggle="tab" href="#menu1">My Scheduled VMRs <span class="badge">{{scheduled_count}}</span></a></li>{% endif %}
+    {% if config.DEVICES == 'true' %}<li><a data-toggle="tab" href="#menu2">My Devices <span class="badge">{{device_count}}</span></a></a></li> {% endif %}
+  </ul>
 
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
 
-  <div class="col-md-2">
-    {%if thumbnailstring %}<img src="data:image/png;base64,{{thumbnailstring}}" width="70">{% endif %} <h3>{{user|capitalize}}</h3>
-  </div>
+      <div class="panel-group">
+        {% for dict_item in vmr_config %}
+          {% if not dict_item['scheduled_conferences'] %}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                    <a class="navbar-brand" href="{{ url_for('edit', id=dict_item.id )}}">{{dict_item['name']}}</a>
+                    <a class="navbar-brand" href="https://{{config.CONTROL_YOUR_VMR_FQDN}}/webapp/?conference={{ dict_item.aliases[0].alias }}&role=host{%if dict_item.pin %}&pin={{dict_item.pin}}{% endif %}&name={{user}}&join=1&media=" target="_blank">Control VMR</a>
+                  </div>
+                  <ul class="nav navbar-nav">
+                    <!-- <li class="active"><a href="#">View</a></li> -->
+                    <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Click to Join
+                      <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                      {% for alias in dict_item.aliases %}
+                        {% if '@' in alias.alias %}
+                          <li class="list-group-item"><i class="fa fa-chrome" aria-hidden="true"></i>&nbsp;WebRTC: <a href="https://{{config.WEBRTC_FQDN}}/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></li>
+                          <li class="list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></li>
+                          <li class="list-group-item"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></li>
+                        {% endif %}
+                        {% if alias.alias|int %}
+                          <li class="list-group-item"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;Phone: <a href="tel:{{config.PHONE_VR}},,{{alias.alias}}">{{config.PHONE_VR}} then enter {{alias.alias}} #</a></li>
+                        {% endif %}
+                      {% endfor %}
+                      </ul>
+                    </li>
+                    <li><a href="{{ url_for('edit', id=dict_item.id )}}">Edit VMR</a></li>
+                  </ul>
+                  <p class="navbar-text navbar-right" style="color: orange">{{dict_item['description']}}&nbsp;</p>
+                </div>
+              </nav>
 
-<div class="modal fade" id="modal-container-841027" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
- <div class="modal-dialog">
-   <div class="modal-content">
-     <div class="modal-header">
+            <div class="panel-body">
+              <table class="table table-striped"> 
+                <thead>
+                  <tr>
+                    <th>Host PIN</th>
+                    <th>Allow Guests</th>
+                    <th>Guest PIN</th>
+                    <th>Allow Guests to Present</th>
+                  </tr>
+                </thead>
+                <tbody>      
+                {% if dict_item['pin']%}
+                  <td>{{dict_item['pin']}}</td>
+                {% endif %}
+                {% if dict_item['allow_guests']%}
+                  <td>Yes</td>
+                {% else %}
+                  <td>No</td>
+                {% endif %}        
+                {% if dict_item['guest_pin']%}
+                  <td>{{dict_item['guest_pin']}}</td>
+                {% elif not dict_item['allow_guests']%}
+                  <td>No guests allowed</td>
+                {% else %}
+                  <td>No Guest PIN</td>
+                {% endif %}
+                {% if dict_item['enable_overlay_text'] %}
+                  <td>Yes</td>
+                {% else %}
+                  <td>No</td>
+                {% endif %}
+                  <tr>
+                <th>Conference View</th>
+                {%if dict_item['host_view'] == "one_main_seven_pips" %}
+                  <td><img src="{{ url_for('static', filename='img/one_main_seven_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+                {%endif%}</td>
+                {%if dict_item['host_view'] == "one_main_twentyone_pips" %}
+                  <td><img src="{{ url_for('static', filename='img/one_main_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+                {%endif%}</td>
+                {%if dict_item['host_view'] == "one_main_zero_pips" %}
+                  <td><img src="{{ url_for('static', filename='img/one_main_zero_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+                {%endif%}</td>
+                {%if dict_item['host_view'] == "two_mains_twentyone_pips" %}
+                  <td><img src="{{ url_for('static', filename='img/two_mains_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+                {%endif%}</td>
+                  </tr>
 
-       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-         ×
-       </button>
-       <h4 class="modal-title" id="myModalLabel">
-         Devices for user: {{user|capitalize}}
-       </h4>
-     </div>
-     <div class="modal-body">
-       {% if devices %}
-       <div class="table-responsive">
+                </tbody> 
+              </table>
+            </div>
+
+<!--             <div class="panel-footer">
+
+                <button class="btn btn-link"  data-clipboard-text="
+
+                    Please meet in myVMR:
+                        Ways to connect:{% for alias in dict_item.aliases %}
+                        {% if alias.alias is string %}matched str {{alias.alias}}{%elif alias.alias is number %}matched int for {{alias.alias}}{%endif%}
+                        {% if '@' in alias.alias %}
+                        {% if dict_item.guest_pin %}PIN Number: {{dict_item.guest_pin}}{% endif %}
+                        Skype: sip://{{alias.alias}}
+                        WebRTC: https://{{config.WEBRTC_FQDN}}/webapp/?conference={{alias.alias}}
+                        Pexip APP: pexip://{{alias.alias}}{% endif %}{% if alias.alias|int %}
+                        Phone: {{config.PHONE_VR}} then enter {{alias.alias}} #{% endif %}{% endfor %}">
+                        <span class=" glyphicon glyphicon-copy"></span>&nbsp;Copy VMR to clipboard
+                </button>
+              </div> -->
+            </div>
+          </div><br />
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      <h3>Scheduled VMRs</h3>
+      <div class="panel-group">
+        {% for dict_item in vmr_config %}
+          {% if dict_item['scheduled_conferences']%}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                    <a class="navbar-brand" href="{{ url_for('edit', id=dict_item.id )}}">{{dict_item['name']}}</a>
+                  </div>
+                  <ul class="nav navbar-nav">
+                    <!-- <li class="active"><a href="#">View</a></li> -->
+                    <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Click to Join
+                      <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                      {% for alias in dict_item.aliases %}
+                        {% if '@' in alias.alias %}
+                          <li class="list-group-item"><i class="fa fa-chrome" aria-hidden="true"></i>&nbsp;WebRTC: <a href="https://{{config.WEBRTC_FQDN}}/webapp/?conference={{alias.alias}}">{{alias.alias}}</a></li>
+                          <li class="list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;Skype: <a href="sip:{{alias.alias}}">{{alias.alias}}</a></li>
+                          <li class="list-group-item"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;Pexip APP: <a href="pexip:{{alias.alias}}">{{alias.alias}}</a></li>
+                        {% endif %}
+                        {% if alias.alias|int %}
+                          <li class="list-group-item"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp;Phone: <a href="tel:{{config.PHONE_VR}},,{{alias.alias}}">{{config.PHONE_VR}} then enter {{alias.alias}} #</a></li>
+                        {% endif %}
+                      {% endfor %}
+                      </ul>
+                    </li>
+                    <li><a href="{{ url_for('edit', id=dict_item.id )}}">Edit VMR</a></li>
+                  </ul>
+                  <p class="navbar-text navbar-right" style="color: orange">{{dict_item['description']}}&nbsp;</p>
+                </div>
+              </nav>
+
+            <div class="panel-body">
+              <table class="table table-striped"> 
+                <thead>
+                  <tr>
+                    <th>Host PIN</th>
+                    <th>Allow Guests</th>
+                    <th>Guest PIN</th>
+                    <th>Allow Guests to Present</th>
+                  </tr>
+                </thead>
+                <tbody>      
+                {% if dict_item['pin']%}
+                  <td>{{dict_item['pin']}}</td>
+                {% endif %}
+                {% if dict_item['allow_guests']%}
+                  <td>Yes</td>
+                {% else %}
+                  <td>No</td>
+                {% endif %}        
+                {% if dict_item['guest_pin']%}
+                  <td>{{dict_item['guest_pin']}}</td>
+                {% elif not dict_item['allow_guests']%}
+                  <td>No guests allowed</td>
+                {% else %}
+                  <td>No Guest PIN</td>
+                {% endif %}
+                {% if dict_item['enable_overlay_text'] %}
+                  <td>Yes</td>
+                {% else %}
+                  <td>No</td>
+                {% endif %}
+                  <tr>
+                <th>Conference View</th>
+                {%if dict_item['host_view'] == "one_main_seven_pips" %}
+                  <td><img src="{{ url_for('static', filename='img/one_main_seven_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+                {%endif%}</td>
+                {%if dict_item['host_view'] == "one_main_twentyone_pips" %}
+                  <td><img src="{{ url_for('static', filename='img/one_main_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+                {%endif%}</td>
+                {%if dict_item['host_view'] == "one_main_zero_pips" %}
+                  <td><img src="{{ url_for('static', filename='img/one_main_zero_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+                {%endif%}</td>
+                {%if dict_item['host_view'] == "two_mains_twentyone_pips" %}
+                  <td><img src="{{ url_for('static', filename='img/two_mains_twentyone_pips.png') }}" alt="1+21" style="width:150px;height:108px;">
+                {%endif%}</td>
+                  </tr>
+
+                </tbody> 
+              </table>
+            </div>
+            <div class="panel-footer">
+
+ <!--                <button class="btn btn-link"  data-clipboard-text="
+                    Please meet in myVMR:
+                        Ways to connect:{% for alias in dict_item.aliases %}{% if '@' in alias.alias %}
+                        {% if dict_item.guest_pin %}PIN Number: {{dict_item.guest_pin}}{% endif %}
+                        Skype: sip://{{alias.alias}}
+                        WebRTC: https://{{config.WEBRTC_FQDN}}/webapp/?conference={{alias.alias}}
+                        Pexip APP: pexip://{{alias.alias}}{% endif %}{% if alias.alias|int %}
+                        Phone: {{config.PHONE_VR}} then enter {{alias.alias}} #{% endif %}{% endfor %}">
+                        <span class=" glyphicon glyphicon-copy"></span>&nbsp;Copy VMR to clipboard
+                </button> -->
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+  <div id="menu2" class="tab-pane fade">
+    <h3>My Devices</h3>
+    {% if devices %}
+      <div class="table-responsive">
         <table class="table table-striped">
           <thead>
-              <tr>
-                  <th>Alias</th>
-                  <th>Description</th>
-              <tr>
+            <tr>
+              <th>Alias</th>
+              <th>Description</th>
+            </tr>
           </thead>
           <tbody>
-              {% for d in devices %}
-              <tr>
-                  <td>{{ d.alias }}</td>
-                  <td>{{ d.description }}</td>
-                  <td><a href="{{ url_for('editmydevice', id=d.id) }}"><i class="fa fa-key" aria-hidden="true"></i>&nbsp;Change Password</a></td>
-                  {% if d.primary_owner_email_address %}
-                  <td><a href="{{ url_for('emaildevice', id=d.id) }}"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email Me Details</a></td>
-                   {% else %}
-                   <td><i>No email address</i></td>
-                  {% endif %}
-              </tr>
-              <!-- <tr><td><a href="pexip-provision:settings?name=Dennis&registrationHost=vc.pexip.com.au&registrationAlias={{d.alias}}&registrationUsername={{d.username}}&registrationPassword=12345">Provision</a></td></tr> -->
-              {% endfor %}
+            {% for d in devices %}
+            <tr>
+                <td>{{ d.alias }}</td>
+                <td>{{ d.description }}</td>
+                <td><a href="{{ url_for('editmydevice', id=d.id) }}"><i class="fa fa-key" aria-hidden="true"></i>&nbsp;Change Password</a></td>
+                {% if d.primary_owner_email_address %}
+                <td><a href="{{ url_for('emaildevice', id=d.id) }}"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email Me Details</a></td>
+                 {% else %}
+                 <td><i>No email address</i></td>
+                {% endif %}
+            </tr>
+            
+            {% endfor %}
           </tbody>
-      </table>
-      <hr>
+        </table>
       </div>
-      {% endif %}
-     </div>
-     <div class="modal-footer">
-
-       <button type="button" class="btn btn-default" data-dismiss="modal">
-         Close
-       </button>
-     </div>
-   </div>
-
- </div>
-
+    {% endif %}
+  </div>
 </div>
-
-
+</div>
 {% endblock %}
