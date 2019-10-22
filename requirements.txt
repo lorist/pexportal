@@ -5,7 +5,7 @@ Flask-WTF==0.12
 itsdangerous==0.24
 Jinja2==2.10.1
 MarkupSafe==0.23
-Pillow==3.3.2
+Pillow==6.2.0
 pyldap==2.4.25.1
 requests==2.20.0
 uWSGI==2.0.13.1
